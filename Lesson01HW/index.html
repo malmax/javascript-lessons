@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ДЗ для первого урока</title>
+<script>
+	"use strict";
+	//первое задание
+	/*
+	●	Вывести «Привет, Javascript» c помощью alert
+	*/
+	alert("Привет, Javascript");
+
+	//второе задание
+	/*
+	●	Работа с переменными
+	●	Объявите две переменные: admin и name.
+	●	Запишите в name строку "Василий".
+	●	Скопируйте значение из name в admin.
+	●	Выведите admin (должно вывести «Василий»).
+	*/
+	var name = "Василий";
+	var admin;
+	admin = name;
+	alert(admin);
+
+	//третье задание
+	/*
+	●	* Самостоятельно разобраться с атрибутами тэга script (async и defer)
+	*/
+	var async = "async - при обнаружении <script async src=\"...\"> браузер не останавливает обработку страницы, а спокойно работает дальше. Когда скрипт будет загружен – он выполнится.";
+	var defer = "defer - то же самое, что и async, но браузер гарантирует, что относительный порядок скриптов с defer будет сохранён";
+	document.getElementByTagClass("bodytext").innerHtml(async);
+	var newElement = document.createElement("div").innerHtml(defer);
+	document.getElementByTagClass("bodytext").appendChild(newElement);
+
+
+</script>
+</head>
+<body>
+	<div class="bodytext"></div>
+</body>
+</html>
