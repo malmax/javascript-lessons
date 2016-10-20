@@ -30,9 +30,9 @@
 	*/
 	var async = "async - при обнаружении <script async src=\"...\"> браузер не останавливает обработку страницы, а спокойно работает дальше. Когда скрипт будет загружен – он выполнится.";
 	var defer = "defer - то же самое, что и async, но браузер гарантирует, что относительный порядок скриптов с defer будет сохранён";
-	document.getElementByTagClass("bodytext").innerHtml(async);
+	document.getElementsByClassName("bodytext")[0].innerHTML = async;
 	var newElement = document.createElement("div").innerHtml(defer);
-	document.getElementByTagClass("bodytext").appendChild(newElement);
+	document.getElementsByClassName("bodytext")[0].innerHTML.appendChild(newElement);
 
 
 </script>
