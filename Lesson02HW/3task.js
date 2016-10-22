@@ -5,10 +5,10 @@ console.log все числа от 1 до 100, с двумя исключени�
 (но не на 3) – ‘Buzz’.Когда сумеете – исправьте её так, чтобы она выводила
 «FizzBuzz» для всех чисел, которые делятся и на 3 и на 5.*/
 
-"use strict";
+//"use strict";
 var start = 0;
 var end = 100;
 
 for (var current = start; current <= end; current++) {
-    console.console.log(current);
+    console.log(current);
 }
