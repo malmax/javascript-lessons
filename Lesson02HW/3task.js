@@ -9,9 +9,8 @@ console.log все числа от 1 до 100, с двумя исключени�
 var start = 1;
 var end = 100;
 var output = "";
-var output2 = "";
 
-for (var current = start; current <= end; output2 = "", current++) {
+for (var current = start; current <= end; current++) {
 
     output = current;
 
@@ -20,11 +19,9 @@ for (var current = start; current <= end; output2 = "", current++) {
         output += " Fizz";
     } else if (current % 5 === 0 && current % 3 !== 0) { //делится без остатка на 5, но не на 3
         output += " Buzz";
+    } else if (current % 3 === 0 && current % 5 === 0) { //делится без остатка и на 3, и на 5
+        output += " FizzBuzz";
     }
 
-    if (current % 3 === 0 && current % 5 === 0) { //делится и на 3 и на 5
-        output2 += " FizzBuzz";
-    }
-
-    console.log(output + "" + output2);
+    console.log(output);
 }
