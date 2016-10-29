@@ -22,7 +22,7 @@ var str = "";
 
 for (var i = 0; i < 8; i++) {
     for (var j = 0; j < 8; j++) {
-        str += " # ";
+        str = str + ((i % 2 === 0) ? " #" : "# ");
     }
     str += "\n";
 }
@@ -36,13 +36,13 @@ console.log("задание 3\n");
 
 for (var i = 1; i <= 100; i++) {
     var t = "";
-    if (i % 3 == 0) {
+    if (i % 3 === 0) {
         t += "Fizz";
     }
-    if (i % 5 == 0) {
+    if (i % 5 === 0) {
         t += "Buzz";
     }
-    if (t == "") {
+    if (t === "") {
         t = i;
     }
     console.log(t);
