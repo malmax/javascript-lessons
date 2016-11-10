@@ -3,22 +3,60 @@
 "use strict";
 
 var table = document.createElement("table");
-table.width = "900px";
-table.height = "900px";
 var trs = newlist();
 var tds = newlist();
 var contents = newlist();
-var txt = "";
+var inner = {};
+var className = "";
+var elem = {};
+var headerNames = {
+    'h01': 'A',
+    'h02': 'B',
+    'h03': 'C',
+    'h04': 'D',
+    'h05': 'E',
+    'h06': 'F',
+    'h07': 'G',
+    'h08': 'H',
+    'h10': 1,
+    'h20': 2,
+    'h30': 3,
+    'h40': 4,
+    'h50': 5,
+    'h60': 7,
+    'h70': 8,
+}
 
-for (var i = 0; i < 9; i++) {
-    trs.prepend("tr"+i, document.createElement("tr"));
+for (var i = 0; i < 8; i++) {
+    //Строки имеют адрес tr_{row}, tr_4
+    trs.prepend("tr" + i, document.createElement("tr"));
 
     for (var j = 0; j < 9; j++) {
-        tds.prepend("td_"+i+"_"+j,document.createElement("td"));
-        var elem = (trs.findInList("tr"+i).value);
-        elem.appendChild(tds.findInList("td_"+i+"_"+j).value);
+        inner = null;
+
+        //Делим на черные/белые
+        if ((j + i) % 2 === 0) {
+            className = "white";
+        } else {
+            className = "black";
+        }
+
+        //Если заголовки то меняем на класс header
+        if (i === 0 || j === 0) {
+            className = "header";
+            if(!(!i && !j))
+                inner = document.createTextNode(headerNames['h' + i + j]);
+        }
+        // Создаем ячейки, они имеют адрес td_{row}_{col}, td_6_4
+        elem = document.createElement("td");
+        elem.className = className;
+        if (inner !== null) {
+            elem.appendChild(inner);
+        }
+        tds.prepend("td_" + i + "_" + j, elem);
+        trs.findInList("tr" + i).value.appendChild(tds.findInList("td_" + i + "_" + j).value);
     }
-    table.appendChild(trs.findInList("tr"+i).value);
+    table.appendChild(trs.findInList("tr" + i).value);
 }
 
 document.body.appendChild(table);
@@ -82,7 +120,7 @@ function findInList(name) {
         'rest': this.rest,
     };
 
-    while (list.name != undefined && list != null) {
+    while (list.name !== undefined && list !== null) {
         if (name == list.name) {
             return list;
         }
