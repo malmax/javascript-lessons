@@ -10,6 +10,7 @@
         td {
             border: 2px solid black;
             text-align: center;
+            position: relative;
         }
         table {
             width: 850px;
@@ -19,9 +20,11 @@
         }
         .black {
             background-color: gray;
+            color: white;
         }
         .white {
             background-color: white;
+            color: black;
         }
         .header {
             border: none;
@@ -37,10 +40,34 @@
         tr td:first-child {
             text-align: right;
         }
+        .small {
+          bottom: 0px;
+          right: 0px;
+          position: absolute;
+          font-size: 0.7rem;
+        }
+
+        .unit {
+          width: 50px
+        }
+
+        .white-icon svg {
+          stroke-width: 2px;
+          stroke: currentColor;
+          fill: white;
+        }
+
+        .letter {
+          top: 0px;
+          left: 0px;
+          position: absolute;
+          font-size: 1.5rem;
+        }
     </style>
 </head>
 
 <body>
+
 
     <script type="text/javascript" src="task1.js"></script>
 </body>

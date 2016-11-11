@@ -1,10 +1,15 @@
 // Малахов Максим
 // •	Создать функцию, генерирующую шахматную доску. При этом можно использовать любые html-тэги по своему желанию. Доска должна быть разленована соответствующим образом, т.е. чередовать черные и белые ячейки. Строки должны нумероваться числами от 1 до 8, столбцы – латинскими буквами A, B, C, D, E, F, G, H.
+
+
 "use strict";
 
+var DEBUG = true;
 var table = document.createElement("table");
 var trs = newlist();
 var tds = newlist();
+var playerWhiteUnits = newlist();
+var playerBlackUnits = newlist();
 var contents = newlist();
 var inner = {};
 var className = "";
@@ -23,11 +28,213 @@ var headerNames = {
     'h30': 3,
     'h40': 4,
     'h50': 5,
-    'h60': 7,
-    'h70': 8,
+    'h60': 6,
+    'h70': 7,
+    'h80': 8,
 }
 
-for (var i = 0; i < 8; i++) {
+var playerWhite = {
+    "className": "white-icon unit",
+    "units": {
+        "pawn": {
+            "src": "src/Chess_plt45.svg",
+            "letter": "П",
+            "positions": [{
+                "x": 1,
+                "y": 7,
+                "id": 1
+            }, {
+                "x": 2,
+                "y": 7,
+                "id": 2
+            }, {
+                "x": 3,
+                "y": 7,
+                "id": 3
+            }, {
+                "x": 4,
+                "y": 7,
+                "id": 4
+            }, {
+                "x": 5,
+                "y": 7,
+                "id": 5
+            }, {
+                "x": 6,
+                "y": 7,
+                "id": 6
+            }, {
+                "x": 7,
+                "y": 7,
+                "id": 7
+            }, {
+                "x": 8,
+                "y": 7,
+                "id": 8
+            }, ],
+        },
+        "king": {
+            "src": "src/Chess_klt45.svg",
+            "letter": "К",
+            "positions": [{
+                "x": 4,
+                "y": 8,
+                "id": 1
+            }, ],
+        },
+        "queen": {
+            "src": "src/Chess_qlt45.svg",
+            "letter": "Ф",
+            "positions": [{
+                "x": 5,
+                "y": 8,
+                "id": 1
+            }, ],
+        },
+        "knight": {
+            "src": "src/Chess_nlt45.svg",
+            "letter": "Р",
+            "positions": [{
+                "x": 3,
+                "y": 8,
+                "id": 1
+            }, {
+                "x": 6,
+                "y": 8,
+                "id": 2
+            }, ],
+        },
+        "bishop": {
+            "src": "src/Chess_blt45.svg",
+            "letter": "Л",
+            "positions": [{
+                "x": 2,
+                "y": 8,
+                "id": 1
+            }, {
+                "x": 7,
+                "y": 8,
+                "id": 2
+            }, ],
+        },
+        "rok": {
+            "src": "src/Chess_rlt45.svg",
+            "letter": "Б",
+            "positions": [{
+                "x": 1,
+                "y": 8,
+                "id": 1
+            }, {
+                "x": 8,
+                "y": 8,
+                "id": 2
+            }, ],
+        },
+    },
+}
+
+var playerBlack = {
+    "className": "black-icon unit",
+    "units": {
+        "pawn": {
+            "src": "src/Chess_pdt45.svg",
+            "letter": "П",
+            "positions": [{
+                "x": 1,
+                "y": 2,
+                "id": 1
+            }, {
+                "x": 2,
+                "y": 2,
+                "id": 2
+            }, {
+                "x": 3,
+                "y": 2,
+                "id": 3
+            }, {
+                "x": 4,
+                "y": 2,
+                "id": 4
+            }, {
+                "x": 5,
+                "y": 2,
+                "id": 5
+            }, {
+                "x": 6,
+                "y": 2,
+                "id": 6
+            }, {
+                "x": 7,
+                "y": 2,
+                "id": 7
+            }, {
+                "x": 8,
+                "y": 2,
+                "id": 8
+            }, ],
+        },
+        "king": {
+            "src": "src/Chess_kdt45.svg",
+            "letter": "К",
+            "positions": [{
+                "x": 4,
+                "y": 1,
+                "id": 1
+            }, ],
+        },
+        "queen": {
+            "src": "src/Chess_qdt45.svg",
+            "letter": "Ф",
+            "positions": [{
+                "x": 5,
+                "y": 1,
+                "id": 1
+            }, ],
+        },
+        "knight": {
+            "src": "src/Chess_ndt45.svg",
+            "letter": "Р",
+            "positions": [{
+                "x": 3,
+                "y": 1,
+                "id": 1
+            }, {
+                "x": 6,
+                "y": 1,
+                "id": 2
+            }, ],
+        },
+        "bishop": {
+            "src": "src/Chess_bdt45.svg",
+            "letter": "Л",
+            "positions": [{
+                "x": 2,
+                "y": 1,
+                "id": 1
+            }, {
+                "x": 7,
+                "y": 1,
+                "id": 2
+            }, ],
+        },
+        "rok": {
+            "src": "src/Chess_rdt45.svg",
+            "letter": "Б",
+            "positions": [{
+                "x": 1,
+                "y": 1,
+                "id": 1
+            }, {
+                "x": 8,
+                "y": 1,
+                "id": 2
+            }, ],
+        },
+    },
+}
+
+// Рисуем игровую доску
+for (var i = 0; i < 9; i++) {
     //Строки имеют адрес tr_{row}, tr_4
     trs.prepend("tr" + i, document.createElement("tr"));
 
@@ -44,8 +251,14 @@ for (var i = 0; i < 8; i++) {
         //Если заголовки то меняем на класс header
         if (i === 0 || j === 0) {
             className = "header";
-            if(!(!i && !j))
+            if (!(!i && !j))
                 inner = document.createTextNode(headerNames['h' + i + j]);
+        } else if (DEBUG) {
+            var txt = document.createTextNode('td_' + i + '_' + j);
+            inner = document.createElement('div');
+            inner.className = "small";
+            inner.appendChild(txt);
+
         }
         // Создаем ячейки, они имеют адрес td_{row}_{col}, td_6_4
         elem = document.createElement("td");
@@ -59,6 +272,74 @@ for (var i = 0; i < 8; i++) {
     table.appendChild(trs.findInList("tr" + i).value);
 }
 
+//Создаем фигуры белого игрока
+Object.keys(playerWhite.units).forEach(function(unitName) {
+    if (unitName !== undefined) {
+        playerWhite.units[unitName].positions.forEach(function(coordinate) {
+            if (coordinate !== undefined) {
+                //Создаем обертку для фигуры + название, чтобы двигать именно ее
+                var wrapper = document.createElement('div');
+                wrapper.id = "white_" + unitName + "_" + coordinate.id;
+                //Создаем название фигуры
+                var txt = document.createTextNode(playerWhite.units[unitName].letter);
+                var inner = document.createElement('div');
+                inner.className = "letter";
+                inner.appendChild(txt);
+                // добавляем в wrapper
+                wrapper.appendChild(inner);
+
+                //создаем фигуру и добавляем ей свойств
+                var elem = document.createElement("object");
+                elem.type = "image/svg+xml";
+                elem.data = playerWhite.units[unitName].src;
+                elem.className = playerWhite.className + " " + unitName;
+                playerWhiteUnits.prepend(unitName + "_" + coordinate.id, elem);
+                // добавляем в wrapper
+                wrapper.appendChild(elem);
+
+                //добавляем на доску
+                tds.findInList("td_" + coordinate.y + "_" + coordinate.x).value.appendChild(wrapper);
+            }
+        });
+    }
+
+});
+
+//Создаем фигуры черного игрока
+Object.keys(playerBlack.units).forEach(function(unitName) {
+    if (unitName !== undefined) {
+        playerBlack.units[unitName].positions.forEach(function(coordinate) {
+            if (coordinate !== undefined) {
+                //Создаем обертку для фигуры + название, чтобы двигать именно ее
+                var wrapper = document.createElement('div');
+                wrapper.id = "black_" + unitName + "_" + coordinate.id;
+                //Создаем название фигуры
+                var txt = document.createTextNode(playerBlack.units[unitName].letter);
+                var inner = document.createElement('div');
+                inner.className = "letter";
+                inner.appendChild(txt);
+                // добавляем в wrapper
+                wrapper.appendChild(inner);
+
+                //создаем фигуру и добавляем ей свойств
+                var elem = document.createElement("object");
+                elem.type = "image/svg+xml";
+                elem.data = playerBlack.units[unitName].src;
+                elem.className = playerBlack.className + " " + unitName;
+                playerBlackUnits.prepend(unitName + "_" + coordinate.id, elem);
+                // добавляем в wrapper
+                wrapper.appendChild(elem);
+
+                //добавляем на доску
+                tds.findInList("td_" + coordinate.y + "_" + coordinate.x).value.appendChild(wrapper);
+            }
+        });
+    }
+
+});
+
+
+//Выводим все на экран
 document.body.appendChild(table);
 
 
