@@ -289,11 +289,22 @@ Object.keys(playerWhite.units).forEach(function(unitName) {
                 wrapper.appendChild(inner);
 
                 //создаем фигуру и добавляем ей свойств
-                var elem = document.createElement("object");
+                var elem = document.createElement("svg");
+                // var xhr = new XMLHttpRequest;
+                // var elem = "";
+                // xhr.open('get',playerWhite.units[unitName].src,true);
+                // xhr.onreadystatechange = function(){
+                //   if (xhr.readyState != 4) return;
+                //   elem = xhr.responseXML.documentElement;
+                //   elem = document.importNode(svg,true); // surprisingly optional in these browsers
+                // //   document.body.appendChild(svg);
+                // };
+                // xhr.send();
                 elem.type = "image/svg+xml";
                 elem.data = playerWhite.units[unitName].src;
                 elem.className = playerWhite.className + " " + unitName;
-                playerWhiteUnits.prepend(unitName + "_" + coordinate.id, elem);
+
+                playerWhiteUnits.prepend(unitName + "_" + coordinate.id, svelemg);
                 // добавляем в wrapper
                 wrapper.appendChild(elem);
 
