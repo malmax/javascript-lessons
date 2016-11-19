@@ -1,3 +1,5 @@
+/* jshint browser: true */
+/* jshint node: true */
 // Малахов Максим
 // •	Создать функцию, генерирующую шахматную доску. При этом можно использовать любые html-тэги по своему желанию. Доска должна быть разленована соответствующим образом, т.е. чередовать черные и белые ячейки. Строки должны нумероваться числами от 1 до 8, столбцы – латинскими буквами A, B, C, D, E, F, G, H.
 
@@ -31,7 +33,7 @@ var headerNames = {
     'h60': 6,
     'h70': 7,
     'h80': 8,
-}
+};
 
 var playerWhite = {
     "className": "white-icon unit",
@@ -131,7 +133,7 @@ var playerWhite = {
             }, ],
         },
     },
-}
+};
 
 var playerBlack = {
     "className": "black-icon unit",
@@ -231,7 +233,7 @@ var playerBlack = {
             }, ],
         },
     },
-}
+};
 
 // Рисуем игровую доску
 for (var i = 0; i < 9; i++) {
@@ -289,7 +291,7 @@ Object.keys(playerWhite.units).forEach(function(unitName) {
                 wrapper.appendChild(inner);
 
                 //создаем фигуру и добавляем ей свойств
-                var elem = document.createElement("object");                
+                var elem = document.createElement("object");
                 elem.type = "image/svg+xml";
                 elem.data = playerWhite.units[unitName].src;
                 elem.className = playerWhite.className + " " + unitName;
@@ -380,7 +382,7 @@ function prepend(name, value) {
     };
 
     //Проверка есть ли такое имя уже в списке
-    if (this.findInList(name) == undefined) {
+    if (this.findInList(name) === undefined) {
         delete this.prepend;
         delete this.findInList;
 
