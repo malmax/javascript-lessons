@@ -8,7 +8,7 @@
 // ●	* Добавить возможность отсутствия фигур (например, если они были срублены) и предусмотреть проверку корректности данных (например, что на доске сейчас находится не больше двух королей и тп.), в случае, если данные некорректны – выдать человекопонятную ошибку.
 
 
-var DEBUG = true;
+var DEBUG = false;
 
 function ChessBase(elemIdToInsert) {
 
@@ -42,7 +42,7 @@ function ChessBase(elemIdToInsert) {
         rows = rows || 8;
         cols = cols || 8;
         //отчет цифр идет снизу вверх
-        for (var i = rows+1; i >=1; i--) {
+        for (var i = rows + 1; i >= 1; i--) {
             //Создаем строку
             var tr = document.createElement("tr");
 
@@ -52,11 +52,11 @@ function ChessBase(elemIdToInsert) {
                 var td = createTD(i, j);
 
                 //Если заголовки то меняем на класс header
-                if (i === (rows+1) || j === 0) {
+                if (i === (rows + 1) || j === 0) {
                     td.classList.add("header");
                     //Создание заголовки таблицы
                     var number = !j ? parseInt(i) : "";
-                    var letter = i === (rows+1) ? String.fromCharCode(64 + j) : "";
+                    var letter = i === (rows + 1) ? String.fromCharCode(64 + j) : "";
                     //если i и j одновременно 0, то не выводим заголовок
                     inner = document.createTextNode(letter + number);
                     td.appendChild(inner);
@@ -105,6 +105,9 @@ function Chess(elemIdToInsert) {
 
     //установка активной ячейки
     this.setActiveTD = function(target) {
+        while (target.nodeName != 'TD') {
+            target = target.parentElement;
+        }
         target.classList.add('selected');
         return target.id;
     };
@@ -112,19 +115,23 @@ function Chess(elemIdToInsert) {
 }
 
 //базовый класс фигуры
-function GameBaseElement(elemType, color) {
+function GameUnit(elemType, color, startLocation, unitClass, unitId) {
 
+    var that = this;
+
+    //приватное свойство - цвет фигуры
+    var colorUnit = 'black';
+    var moveUp = false;
     //цвет и направление движения
     if (color == 'white') {
-        this.color = 'white';
-        this._moveUp = true;
-    } else {
-        this.color = 'black';
-        this._moveUp = false;
+        colorUnit = 'white';
+        moveUp = true;
     }
-    //тип фигуры
-    this._type = 'тип фигуры';
-    var setType = function setType(elemType) {
+
+    //приватное совйство - тип фигуры
+    var type = 'тип фигуры';
+    //приватная функция сеттер
+    function setType(elemType) {
         var possibleTypes = {
             'pawn': true,
             'tower': true,
@@ -134,49 +141,70 @@ function GameBaseElement(elemType, color) {
             'king': true
         };
         if (elemType in possibleTypes) {
-            this._type = possibleTypes[elemType];
+            type = elemType;
         } else {
-            throw console.error("Неправильно задана фигура");
+            throw "Неправильно задан тип фигуры " + elemType;
         }
-    };
-    this.setType(elemType);
-
-    //состояние фигуры
-    this.live = true;
-    //текущая локация
-    this.сurentLocation = {};
-
+    }
+    setType(elemType);
+    //id нужен чтобы отследить конкретную фигуру
+    this.id = colorUnit + type + unitId;
+    //приватное свойство - состояние фигуры
+    var live = true;
+    //приватное свойство - текущая локация
+    var currentLocation = document.getElementById(startLocation);
+    //создаем дом-элемент для вывода юнита
+    this.unit = document.createElement('span');
+    this.unit.classList.add('glyphicon');
+    this.unit.classList.add(colorUnit);
+    this.unit.classList.add(unitClass);
+    this.unit.id = this.id;
+    this.unit.setAttribute('aria-hidden', 'true');
 
     //двигаемся в ячейку
-    this._moveTo = function(destination) {
+    function moveTo (destination) {
         //получение относительных координат
-        //TODO: проверку и передвижение юнита
-    };
+        destination.appendChild(that.unit);
+        currentLocation = destination;
+        //убираем обработчик с точки куда переместились
+        destination.onclick = null;
+        //убираем не нужные классы can-move-there
+        var parent = document.getElementsByTagName('table')[0];
+        parent.querySelectorAll('td.can-move-there').forEach(function(item) {
+            if (!item.classList.contains('header')) {
+                //убираем не нужные классы can-move-there
+                item.classList.remove('can-move-there');
+            }
+        });
+
+    }
     //можно ли передвинуться на точку с относительными от текущей фигуры координатами (x,y)
-    this.couldMoveTo = function(x, y) {
+    function couldMoveTo(x, y) {
         var check = false;
-        switch (this._type) {
-            case 'pawn':
-                if (x === 0 && y === 1)
+
+        switch (type) {
+            case 'pawn': //пешка ходит только на клетку вперед
+                var pawnCheckY = moveUp ? 1 : -1;
+                if (x === 0 && y === pawnCheckY)
                     check = true;
                 break;
-            case 'tower':
+            case 'tower'://башня
                 if ((Math.abs(x) < 100 && y === 0) || (x === 0 && Math.abs(y) < 100))
                     check = true;
                 break;
-            case 'bishop':
+            case 'bishop': //ладья
                 if (Math.abs(x) === Math.abs(y))
                     check = true;
                 break;
-            case 'knight':
+            case 'knight'://конь
                 if ((Math.abs(x) === 2 && Math.abs(y) === 1) || (Math.abs(x) === 1 && Math.abs(y) === 2))
                     check = true;
                 break;
-            case 'queen':
+            case 'queen': //королева
                 if ((Math.abs(x) === 0 && Math.abs(y) < 100) || (Math.abs(x) < 100 && Math.abs(y) === 0) || (Math.abs(x) === Math.abs(y)))
                     check = true;
                 break;
-            case 'king':
+            case 'king': //король
                 if ((Math.abs(x) === 1 && y === 0) || (x === 0 && Math.abs(y) === 1) || (Math.abs(y) === Math.abs(x) && Math.abs(x) === 1))
                     check = true;
                 break;
@@ -184,10 +212,71 @@ function GameBaseElement(elemType, color) {
         }
 
         return check;
-    };
+    }
 
     //выводим
-    this.draw = function() {
+    this.render = function() {
+        //если фигура "не срублена" то выводим ее
+        if (live) {
+            //находим ячейку в которую надо будет поместить фигуру
+            var td;
+            if (!(td = currentLocation))
+                throw 'Не найдена ячейка ' + currentLocation;
+            //очищаем элементы внутри td
+            while (td.firstChild) {
+                td.removeChild(td.firstChild);
+            }
+            //добавляем юнит в ячейку
+            td.appendChild(this.unit);
+        } else {
+            this.unit.remove();
+        }
+    };
 
+    //получение списка относительных ячеек
+    this.getRelativeTD = function(parentTag, e) {
+
+        //т.к. у нас куча обработчиков, то надо отбросить не активные
+        var target = e.target;
+        while (target.nodeName != 'TD') {
+            target = target.parentElement;
+        }
+        if (target != currentLocation)
+            return;
+
+        var parent = parentTag || document.getElementsByTagName('table')[0];
+
+        var xCur = currentLocation.id.charCodeAt(0);
+        var yCur = parseInt(currentLocation.id.substr(1));
+
+
+        var result = [];
+        //обходим все ячейки доски
+        parent.querySelectorAll('td').forEach(function(item) {
+            if (!item.classList.contains('header')) {
+                //убираем не нужные классы can-move-there
+                item.classList.remove('can-move-there');
+                //убираем обработчик с пустых клеток
+                if(!item.children[0]) {
+                    item.onclick = null;
+                }
+                var x = item.id.charCodeAt(0);
+                var y = parseInt(item.id.substr(1));
+
+                //TODO: лучше перенести функционал присваивания класса в отдельную функцию
+                if (couldMoveTo((x - xCur), (y - yCur)) && (!item.children[0])) {
+                    item.classList.add('can-move-there');
+                    var fun = function(e) { moveTo(item);};
+                    item.onclick = fun.bind(this);
+                }
+                // item.classList.add('can-move-there');
+
+                result.push({
+                    'destTo': item.id,
+                    'x': (x - xCur),
+                    'y': (y - yCur)
+                });
+            }
+        });
     };
 }
