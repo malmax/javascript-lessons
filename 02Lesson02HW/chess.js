@@ -241,6 +241,8 @@ function GameUnit(elemType, color, startLocation, unitClass, unitId) {
                 obj.dest.classList.add('can-move-there');
                 var fun = function(e) { moveTo(obj.dest);};
                 obj.dest.onclick = fun.bind(this);
+
+                //TODO: здесь надо делать рассчет коллизий
             });
         }
     };
