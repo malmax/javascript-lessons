@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Task1</title>
+</head>
+
+<body>
+
+    <h1>Hello World!</h1>
+
+    <script type="text/javascript">
+        /* jshint browser: true */
+        /* jshint node: true */
+        "use strict";
+
+        // Малахов Максим
+        // Создайте код, который загрузит файл phones.json из текущей директории и выведет все названия телефонов из него в виде списка.
+
+        var array = [];
+
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open('GET', './phones.json', true);
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4) {
+                array = JSON.parse(xmlhttp.responseText);
+                makeList();
+            }
+        };
+        xmlhttp.send(null);
+        var list = document.createElement('ul');
+
+        //отрисовываем список только после загрузки данных
+        function makeList() {
+            array.forEach(function(obj) {
+                var li = document.createElement('li');
+                li.innerText = obj.name
+                list.appendChild(li);
+            });
+        }
+        //сначало размещаем пустой список, а после загрузки дополняем его элементами
+        document.body.appendChild(list);
+    </script>
+</body>
+
+</html>
