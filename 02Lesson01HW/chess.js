@@ -9,36 +9,12 @@
 
 var DEBUG = false;
 
-function ChessBase(rows,cols) {
+function ChessBase(elemIdToInsert) {
 
-    //приватные свойства с помощью которых можно рисовать доску любого размера
-    rows = rows || 8;
-    cols = cols || 8;
+    this._elementToInsert = document.getElementById(elemIdToInsert) || document.body;
 
     //публичное свойтсво, т.к. нужно использовать в наследнике. Это - ссылка на дом-объект таблица
-    this.table = document.createElement('table');
-
-    //заголовки столбцов и строк
-    var headerNames = {
-        '1': 'A',
-        '2': 'B',
-        '3': 'C',
-        '4': 'D',
-        '5': 'E',
-        '6': 'F',
-        '7': 'G',
-        '8': 'H',
-        '9': 'N',
-        '10': 1,
-        '20': 2,
-        '30': 3,
-        '40': 4,
-        '50': 5,
-        '60': 6,
-        '70': 7,
-        '80': 8,
-        '90':9,
-    };
+    this._table = document.createElement('table');
 
     //приватный метод создания ячйки
     function createTD(i, j) {
@@ -53,25 +29,21 @@ function ChessBase(rows,cols) {
         }
 
         if (i > 0 && j > 0) {
-            obj.id = headerNames[i] + headerNames[j * 10];
+            obj.id = String.fromCharCode(64+i) + j;
         }
 
         return obj;
     }
 
-    //приватный метод создания строчки
-    function createTR(i) {
-        var obj = document.createElement("tr");
-
-        return obj;
-    }
-
-    // метод рисования доски. мжно поменять кол-во столбцов и строк
-    this.draw = function() {
+    // метод рисования доски
+    this.draw = function(rows,cols) {
+        //значения по-умолчанию
+        rows = rows || 8;
+        cols = cols || 8;
 
         for (var i = 0; i <= rows; i++) {
-            //Строки имеют адрес tr_{row}, tr_4
-            var tr = createTR(i);
+            //Создаем строку
+            var tr = document.createElement("tr");
 
             for (var j = 0; j <= cols; j++) {
                 var inner = null;
@@ -81,14 +53,15 @@ function ChessBase(rows,cols) {
                 //Если заголовки то меняем на класс header
                 if (i === 0 || j === 0) {
                     td.classList.add("header");
-                    if (!(!i && !j)) {
-                        var num = parseInt(i)+j*10;
-                        inner = document.createTextNode(headerNames[num]);
-                        td.appendChild(inner);
-                    }
+                    //Создание заголовки таблицы
+                    var number = !i ? parseInt(j):"";
+                    var letter = !j ? String.fromCharCode(64+i):"";
+                    //если i и j одновременно 0, то не выводим заголовок
+                    inner = document.createTextNode(letter+number);
+                    td.appendChild(inner);
                 } else if (DEBUG) {
                     //отладка
-                    var txt = document.createTextNode(headerNames[i] + headerNames[j * 10]);
+                    var txt = document.createTextNode(String.fromCharCode(64+i) + j);
                     inner = document.createElement('div');
                     inner.className = "small";
                     inner.appendChild(txt);
@@ -96,25 +69,23 @@ function ChessBase(rows,cols) {
                 }
                 tr.appendChild(td);
             }
-            this.table.appendChild(tr);
+            this._table.appendChild(tr);
         }
+        //выводим доску
+        this._elementToInsert.appendChild(this._table);
+        //возвращаем текущий объект
         return this;
     };
 }
 
 
 function Chess(elemIdToInsert) {
-    ChessBase.apply(this,[8,8]);
-
-    var that = this;
-
-    //элемент для добавления к которому можно поменять без пересоздания
-    this.elemIdToInsert = elemIdToInsert;
-
+    //Подключаем базовый класс
+    ChessBase.apply(this,[elemIdToInsert]);
 
     //добавляем прослышивание собятия собственными функциями извне
     this.addClickEvent = function(func) {
-        this.table.addEventListener('click',func);
+        this._table.addEventListener('click',func);
     };
 
     //Получение элемента
@@ -124,9 +95,9 @@ function Chess(elemIdToInsert) {
 
     //Получение элемента
     this.getActiveTD = function() {
-        var obj = this.table.querySelector("TD.selected");
+        var obj = this._table.querySelector("TD.selected");
         if(obj === null)
-            return this.table;
+            return this._table;
         else
             return obj;
     };
@@ -136,13 +107,5 @@ function Chess(elemIdToInsert) {
         target.classList.add('selected');
         return target.id;
     };
-
-    //публичный метод для вывода доски на экран
-    this.show = function() {
-        this.draw();
-        document.getElementById(this.elemIdToInsert).appendChild(this.table);
-    };
-
-
 
 }
