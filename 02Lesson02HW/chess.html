@@ -165,7 +165,7 @@
                             //добавляем обработчик для каждой фигуры
                             //при клике по фигуре будет возможность ее передвигать
                             //поедание пока недоступно =(
-                            var fun = function(e) { this.getRelativeTD(chessTable._elementToInsert,e); };
+                            var fun = function(e) { this.makeMoveEvents(chessTable._elementToInsert,e); };
                             unitRender.unit.addEventListener('click',fun.bind(unitRender));
                         });
 

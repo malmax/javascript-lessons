@@ -233,23 +233,36 @@ function GameUnit(elemType, color, startLocation, unitClass, unitId) {
         }
     };
 
+    //создаем события для передвижения
+    this.makeMoveEvents = function(parentTag, e) {
+        var tds = getRelativeTD(parentTag, e);
+        if(tds) {
+            tds.forEach(function(obj) {
+                obj.dest.classList.add('can-move-there');
+                var fun = function(e) { moveTo(obj.dest);};
+                obj.dest.onclick = fun.bind(this);
+            });
+        }
+    };
+
     //получение списка относительных ячеек
-    this.getRelativeTD = function(parentTag, e) {
+    function getRelativeTD(parentTag, e) {
 
         //т.к. у нас куча обработчиков, то надо отбросить не активные
         var target = e.target;
         while (target.nodeName != 'TD') {
             target = target.parentElement;
         }
+        //смотрим только тот обработчик, который находится в target
         if (target != currentLocation)
             return;
 
+        //дом-доска
         var parent = parentTag || document.getElementsByTagName('table')[0];
-
+        //текущие координаты относительно левого нижнего угла
         var xCur = currentLocation.id.charCodeAt(0);
         var yCur = parseInt(currentLocation.id.substr(1));
-
-
+        //будем возвращать массив всех возможных точек перемещения без учета коллизии
         var result = [];
         //обходим все ячейки доски
         parent.querySelectorAll('td').forEach(function(item) {
@@ -260,23 +273,23 @@ function GameUnit(elemType, color, startLocation, unitClass, unitId) {
                 if(!item.children[0]) {
                     item.onclick = null;
                 }
+                //координаты ячейки относительно левого нижнего угла
                 var x = item.id.charCodeAt(0);
                 var y = parseInt(item.id.substr(1));
 
                 //TODO: лучше перенести функционал присваивания класса в отдельную функцию
                 if (couldMoveTo((x - xCur), (y - yCur)) && (!item.children[0])) {
-                    item.classList.add('can-move-there');
-                    var fun = function(e) { moveTo(item);};
-                    item.onclick = fun.bind(this);
+                    result.push({
+                        'dest': item,
+                        'destX': x,
+                        'destY': y,
+                        'cur':currentLocation,
+                        'curX':xCur,
+                        'curY':yCur,
+                    });
                 }
-                // item.classList.add('can-move-there');
-
-                result.push({
-                    'destTo': item.id,
-                    'x': (x - xCur),
-                    'y': (y - yCur)
-                });
             }
         });
-    };
+        return result;
+    }
 }
