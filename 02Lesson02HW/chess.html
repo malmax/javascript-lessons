@@ -160,8 +160,11 @@
                         obj[color][unit].startLocation.forEach(function(location) {
                             //создаем объект фигуру
                             var unitRender = new GameUnit(unit,color,location,obj[color][unit].unitClass,++unitCount);
+                            //выводим на доску
                             unitRender.render();
-                            //добавляем обработчик от каждой фигуры
+                            //добавляем обработчик для каждой фигуры
+                            //при клике по фигуре будет возможность ее передвигать
+                            //поедание пока недоступно =(
                             var fun = function(e) { this.getRelativeTD(chessTable._elementToInsert,e); };
                             unitRender.unit.addEventListener('click',fun.bind(unitRender));
                         });
@@ -174,11 +177,6 @@
         };
         xmlhttp.send(null);
 
-        function showUnits() {
-            for(var unit in this) {
-
-            }
-        }
     </script>
 </body>
 
