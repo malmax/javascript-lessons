@@ -131,7 +131,7 @@ function Chess(elemIdToInsert) {
                         //каунтер для формирования id
                         var unitCount = 0;
                         //обходим стартовые координаты юнита
-                        unitValues.startLocation.forEach(function(prop) {
+                        unitValues.startLocation.forEach(function(location) {
                             //создаем объект фигуру
                             var unitRender = new GameUnit(unitTypeName,colorName,location,unitValues.unitClass,++unitCount);
                             //выводим на доску
