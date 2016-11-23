@@ -123,6 +123,7 @@
         var chessTable = new Chess('chesstable');
         //рисуем и выводим доску 8 x 8
         chessTable.draw(8, 8);
+        chessTable.drawStartFigures();
         //Добавление обработчика события клик
         // chessTable.addClickEvent(function(e) {
         //     //на кого кликнули
@@ -140,42 +141,7 @@
         //
         //         //запускаем
         //     }
-        // });
-
-        //Рисуем фигуры
-        //получаем информацию кого и где надо нарисовать
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open('GET', './units.json', true);
-        xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == 4) {
-                var obj = JSON.parse(xmlhttp.responseText);
-                //вывод фигур
-                //формат ./units.json можете посмотреть в файле ./units.js
-                //два цвета белый и черный
-                for(var color in obj) {
-                    //проходимся по всем типам фигур
-                    for(var unit in obj[color]) {
-                        //в каждом типе через массив записаны стартовые координаты
-                        var unitCount = 0;
-                        obj[color][unit].startLocation.forEach(function(location) {
-                            //создаем объект фигуру
-                            var unitRender = new GameUnit(unit,color,location,obj[color][unit].unitClass,++unitCount);
-                            //выводим на доску
-                            unitRender.render();
-                            //добавляем обработчик для каждой фигуры
-                            //при клике по фигуре будет возможность ее передвигать
-                            //поедание пока недоступно =(
-                            var fun = function(e) { this.makeMoveEvents(chessTable._elementToInsert,e); };
-                            unitRender.unit.addEventListener('click',fun.bind(unitRender));
-                        });
-
-                    }
-                }
-
-
-            }
-        };
-        xmlhttp.send(null);
+        // });        
 
     </script>
 </body>

@@ -112,6 +112,43 @@ function Chess(elemIdToInsert) {
         return target.id;
     };
 
+    //выводим фигуры
+    this.drawStartFigures = function() {
+        var chessTable = this;
+        //читаем данные из файла
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open('GET', './units.json', true);
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4) {
+                var obj = JSON.parse(xmlhttp.responseText);
+                //вывод фигур
+                //формат ./units.json можете посмотреть в файле ./units.js
+                //два цвета белый и черный
+                Object.keys(obj).forEach(function(colorName) {
+                    Object.keys(obj[colorName]).forEach(function(unitTypeName) {
+                        //данные о фигуре
+                        var unitValues = obj[colorName][unitTypeName];
+                        //каунтер для формирования id
+                        var unitCount = 0;
+                        //обходим стартовые координаты юнита
+                        unitValues.startLocation.forEach(function(prop) {
+                            //создаем объект фигуру
+                            var unitRender = new GameUnit(unitTypeName,colorName,location,unitValues.unitClass,++unitCount);
+                            //выводим на доску
+                            unitRender.render();
+                            //добавляем обработчик для каждой фигуры
+                            //при клике по фигуре будет возможность ее передвигать
+                            //поедание пока недоступно =(
+                            var fun = function(e) { this.makeMoveEvents(chessTable._elementToInsert,e); };
+                            unitRender.unit.addEventListener('click',fun.bind(unitRender));
+                        });
+                    });
+                });
+            }
+        };
+        xmlhttp.send(null);
+    };
+
 }
 
 //базовый класс фигуры
@@ -155,10 +192,10 @@ function GameUnit(elemType, color, startLocation, unitClass, unitId) {
     var currentLocation = document.getElementById(startLocation);
     //создаем дом-элемент для вывода юнита
     this.unit = document.createElement('span');
-    this.unit.classList.add('glyphicon');
-    this.unit.classList.add(colorUnit);
-    this.unit.classList.add(unitClass);
-    this.unit.id = this.id;
+    this.unit.classList.add('glyphicon'); //класс иконки базовая
+    this.unit.classList.add(colorUnit); //цвет
+    this.unit.classList.add(unitClass); //класс иконки юнита
+    this.unit.id = this.id; //id
     this.unit.setAttribute('aria-hidden', 'true');
 
     //двигаемся в ячейку
