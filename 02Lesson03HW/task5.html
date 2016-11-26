@@ -9,12 +9,22 @@
 </head>
 <body>
     <div class="container">
-        <div class="alert alert-danger" id="error"></div>
+
         <form class="form-horizontal" action="task5.html" method="post" id="form">
-            <label for="phone">Номер телефона</label>
-            <input class="form-control" type="text" id="phone" name="phone" value="" placeholder="+7(965)-123-45-67">
-            <label for="email">Email</label>
-            <input class="form-control" type="text" id="email" name="email" value="" placeholder="example@mail.ru">
+
+            <div class="form-group">
+              <label for="phone">Номер телефона</label>
+              <input type="text" class="form-control" id="phone" placeholder="+7(965)-123-45-67" name="phone">
+              <p class="help-block">+7(965)-123-45-67</p>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="text" class="form-control" id="email" placeholder="example@mail.ru" name="email">
+              <p class="help-block">example@mail.ru</p>
+            </div>
+
+
             <div class="input-group">
                 <label for="passport">Серия паспорта</label>
                 <input class="form-control" type="text" name="passportSeria" id="passport" value="">
@@ -31,7 +41,6 @@
 
         function checkForm(e) {
             e.preventDefault();
-            var error = document.getElementById("error");
 
             var email = e.target.querySelector('[name=email]');
             var phone = e.target.querySelector('[name=phone]');
@@ -40,49 +49,60 @@
 
             //проверка email
             if(email.value.search(/^[a-z0-9_\.]+@[a-z0-9]+\.+[a-z0-9]{2,5}$/i) === 0) {
-                email.classList.add("form-control-success");
-                error.innerHTML = "";
+                setSuccess(email);
             }
             else {
-                error.innerHTML = "Неправильно указан email";
-                email.classList.add("form-control-danger");
+                setError(email);
                 e.preventDefault();
             }
 
             //проверка телефона
             if(phone.value.search(/^\+7\(\d{3}\)-\d{3}-\d{2}-\d{2}$/i) === 0) {
-                phone.classList.add("form-control-success");
-                error.innerHTML = "";
+                setSuccess(phone);
             }
             else {
-                phone.innerHTML = "Неправильно указан Телефон";
-                phone.classList.add("form-control-danger");
-                e.preventDefault();
+                setError(phone);
+                // e.preventDefault();
             }
 
             //проверка серии паспорта
             if(passportSeria.value.search(/^\d{4}$/i) === 0) {
-                passportSeria.classList.add("form-control-success");
-                error.innerHTML = "";
+                setSuccess(passportSeria);
             }
             else {
-                passportSeria.innerHTML = "Неправильно указана Серия паспорта";
-                passportSeria.classList.add("form-control-danger");
+                setError(passportSeria);
                 e.preventDefault();
             }
 
             //проверка номер паспорта
             if(passportNumber.value.search(/^\d{6}$/i) === 0) {
-                passportNumber.classList.add("form-control-success");
-                error.innerHTML = "";
+                setSuccess(passportNumber);
             }
             else {
-                passportNumber.innerHTML = "Неправильно указан Номер паспорта";
-                passportNumber.classList.add("form-control-danger");
+                setError(passportNumber);
                 e.preventDefault();
             }
 
         }
+
+        function setError(elem) {
+            console.log(elem.name + " ошибка при проверке");
+
+            elem.classList.remove("form-control-success");
+            elem.parentElement.classList.remove("has-success");
+            elem.classList.add("form-control-danger");
+            elem.parentElement.classList.add("has-danger");
+        }
+
+        function setSuccess(elem) {
+            console.log(elem.name + " успешно проверен");
+
+            elem.classList.remove("form-control-danger");
+            elem.parentElement.classList.remove("has-danger");
+            elem.classList.add("form-control-success");
+            elem.parentElement.classList.add("has-success");
+        }
+
     </script>
 </body>
 </html>
