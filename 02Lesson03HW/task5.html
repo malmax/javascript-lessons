@@ -5,42 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Input</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="container">
 
-        <form class="form-horizontal" action="task5.html" method="post" id="form">
+      <div class="row">
 
-            <div class="form-group">
-              <label for="phone">Номер телефона</label>
-              <input type="text" class="form-control" id="phone" placeholder="+7(965)-123-45-67" name="phone">
-              <p class="help-block">+7(965)-123-45-67</p>
-            </div>
+          <form class="form-horizontal col-md-5" action="task5.html" method="post" id="form">
 
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="text" class="form-control" id="email" placeholder="example@mail.ru" name="email">
-              <p class="help-block">example@mail.ru</p>
-            </div>
+              <div class="form-group">
+                <label for="phone" class="control-label">Номер телефона</label>
+                <input type="text" class="form-control" id="phone" placeholder="+7(965)-123-45-67" name="phone">
+                <p class="help-block">+7(965)-123-45-67</p>
+              </div>
 
+              <div class="form-group">
+                <label for="email" class="control-label">Email</label>
+                <input type="text" class="form-control" id="email" placeholder="example@mail.ru" name="email">
+                <p class="help-block">example@mail.ru</p>
+              </div>
 
-            <div class="input-group">
-                <label for="passport">Серия паспорта</label>
+              <div class="form-group">
+                <label for="passport" class="control-label">Серия паспорта</label>
                 <input class="form-control" type="text" name="passportSeria" id="passport" value="">
-                <label for="passportNumber">Номер паспорта</label>
-                <input class="form-control" type="text" name="passportNumber" value="" id="passportNumber">
-            </div>
-            <input type="submit" class="form-control  btn-primary btn" value="Отправить форму">
+                <p class="help-block">4005</p>
+              </div>
 
-        </form>
+              <div class="form-group">
+                  <label for="passportNumber" class="control-label">Номер паспорта</label>
+                  <input class="form-control" type="text" name="passportNumber" value="" id="passportNumber">
+                  <p class="help-block">123456</p>
+              </div>
+
+              <input type="submit" class="form-control  btn-primary btn" value="Отправить форму">
+
+          </form>
+        </div>
     </div>
 
     <script type="text/javascript">
         document.getElementById('form').addEventListener('submit',checkForm,false);
 
         function checkForm(e) {
-            e.preventDefault();
+            // e.preventDefault();
 
             var email = e.target.querySelector('[name=email]');
             var phone = e.target.querySelector('[name=phone]');
@@ -48,7 +68,7 @@
             var passportNumber = e.target.querySelector('[name=passportNumber]');
 
             //проверка email
-            if(email.value.search(/^[a-z0-9_\.]+@[a-z0-9]+\.+[a-z0-9]{2,5}$/i) === 0) {
+            if(/^[a-z0-9_\.]+@[a-z0-9]+\.+[a-z0-9]{2,5}$/i.test(email.value)) {
                 setSuccess(email);
             }
             else {
@@ -57,7 +77,7 @@
             }
 
             //проверка телефона
-            if(phone.value.search(/^\+7\(\d{3}\)-\d{3}-\d{2}-\d{2}$/i) === 0) {
+            if(/^\+7\(\d{3}\)-\d{3}-\d{2}-\d{2}$/i.test(phone.value)) {
                 setSuccess(phone);
             }
             else {
@@ -66,7 +86,7 @@
             }
 
             //проверка серии паспорта
-            if(passportSeria.value.search(/^\d{4}$/i) === 0) {
+            if(/^\d{4}$/i.test(passportSeria.value)) {
                 setSuccess(passportSeria);
             }
             else {
@@ -75,7 +95,7 @@
             }
 
             //проверка номер паспорта
-            if(passportNumber.value.search(/^\d{6}$/i) === 0) {
+            if(/^\d{6}$/i.test(passportNumber.value)) {
                 setSuccess(passportNumber);
             }
             else {
