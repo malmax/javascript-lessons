@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.polyfill.io/v1/polyfill.js?features=Element.prototype.closest" charset="utf-8"></script>
+</head>
+<body>
+    <!-- <nav id="menu">
+        <span class="title">Базы данных</span>
+        <ul>
+            <li>MongoDB</li>
+            <li>MySQL</li>
+            <li>RetlinkDB</li>
+        </ul>
+    </nav> -->
+
+    <script type="text/javascript">
+        function Menu(options) {
+            var container;
+
+            function getContainer() {
+                if(!container) render();
+                return container;
+            }
+
+            function render() {
+                container = document.createElement('div');
+                container.className = 'menu';
+
+                var titleElement = document.createElement('span');
+                container.appendChild(titleElement);
+                titleElement.className = 'title';
+                titleElement.innerText = options.title;
+
+                container.onmousedown = function(event) {
+                    event.preventDefault();
+                };
+
+                container.onclick = function(event) {
+                    var closestTitle = event.target.closest('.title');
+                    if(closestTitle && container.contains(closestTitle)) {
+                        toggle();
+                    }
+                }
+            }
+
+            function renderItems() {
+                var items = options.items || [];
+                var ul = document.createElement('ul');
+                items.forEach(function(item) {
+                    var li = document.createElement('li');
+                    li.innerText = item;
+                    items.appendChild(li);
+                });
+                container.appendChild(ul);
+            }
+
+            function toggle() {
+                if(container.classList.contains('open')) close();
+                else open();
+            }
+
+            function open() {
+                if(!container.querySelector('ul')) renderItems();
+                container.classList.add('open');
+            }
+
+            function close() {
+                container.classList.remove('open');
+            }
+
+
+            this.toggle = toggle;
+            this.getContainer = getContainer;
+            this.open = open;
+            this.close = close;
+
+        }
+
+        var menu = new Menu({
+            title: 'СУБД',
+            items: [
+                'MongoDB',
+                'MySQL',
+                'RethinkDB',
+            ]
+
+        });
+
+        var element = menu.getContainer();
+        document.body.appendChild(element);
+
+        menu.toggle();
+    </script>
+</body>
+</html>

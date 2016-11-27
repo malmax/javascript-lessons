@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width="300" height="300" style="border: 1px solid black;"></canvas>
+
+    <script type="text/javascript">
+        var canvas = document.getElementById('canvas');
+
+        var context = canvas.getContext('2d');
+
+        if(!context) {
+            alert("Скачай нормальный браузер");
+        }
+
+        context.strokeStyle = '#f00';
+        context.fillStyle = '#ff0';
+        context.lineWidth = 4;
+
+        context.beginPath();
+        context.arc(150,150, 100, 0, 2 * Math.PI, true);
+        context.stroke();
+        context.closePath();
+
+        context.beginPath();
+        context.arc(110,110, 15, 0, 2 * Math.PI, true);
+        context.fill();
+        context.closePath();
+
+        context.beginPath();
+        context.arc(190,110, 15, 0, 2 * Math.PI, true);
+        context.fill();
+        context.closePath();
+
+        context.beginPath();
+        context.moveTo(150,120);
+        context.lineTo(135,180);
+        context.lineTo(165,180);
+        context.stroke();
+        context.closePath();
+
+        context.beginPath();
+        context.arc(150,150, 70, Math.PI, 2 * Math.PI, true);
+        context.stroke();
+        context.closePath();
+
+        context.strokeStyle ='#000';
+        context.beginPath();
+        var x =0, y = 0;
+        for(var i = 0; i<5;i++ ) {
+            context.moveTo(80+x,85+y);
+            context.bezierCurveTo(60+x,60+y,120+x,40+y,100+x,y);
+            context.stroke;
+            x+=15;
+            y-=5;
+        }
+        for(var i = 0; i<5;i++ ) {
+            context.moveTo(80+x,85+y);
+            context.bezierCurveTo(x,60+y,120+x,40+y,100+x,y);
+            context.stroke;
+            x-=15;
+            y-=5;
+        }пуу
+        context.closePath();
+
+    </script>
+</body>
+</html>
