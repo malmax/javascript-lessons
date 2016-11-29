@@ -5,27 +5,78 @@
     <title>Document</title>
 </head>
 <body>
+    <div id="clock">
+
+    </div>
     <script lang="JavaScript">
+        "use strict";
         // Малахов Максим
         // Создайте компонент «Часы» (Clock).
-        // Интерфейс:
-        function Clock(options) {
-            function start() {
+        
+        // Остальные методы, если нужны, должны быть приватными.
+        // При нажатии на alert часы должны приостанавливаться, 
+        // а затем продолжать идти с правильным временем.
 
+        function Clock(options) {
+            var date = new Date();
+            var timer = setInterval(tick,1000);
+            var elem = options.elem || document.body;
+            var enable = true; // часы работают
+            tick();
+            var clockDiv = document.createElement('div');
+            elem.appendChild(clockDiv);
+
+            function tick() {
+                if(enable) {
+                    render();
+                }
+            }
+            function render() {
+                if(elem.childNodes.length <= 1) {
+                    drawButtons();
+                }
+                
+                clockDiv.innerText = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+                
+
+            }
+            function drawButtons() {
+                var buttonStart = document.createElement(button);
+                buttonStart.className('btn');
+                buttonStart.onclick = start.bind(this);
+                buttonStart.innerText = 'Запустить часы';
+                elem.appendChild(buttonStart);
+
+                var buttonStop = document.createElement(button);
+                buttonStop.className('btn');
+                buttonStop.onclick = stop.bind(this);
+                buttonStop.innerText = 'Остановить часы';
+                elem.appendChild(buttonStop);
+
+                //var alertStop = document.createElement(button);
+                //alertStop.className('btn');
+                //alertStop.onclick = start.bind(this);
+                //alertStop.innerText = 'Остановить часы';
+                //elem.appendChild(alertStop);                
+            }
+
+            function start() {
+                enable = true;
             }
 
             function stop() {
-
+                enable = false;
             }
+
+            this.start = start;
+            this.stop = stop;
         }
         var clock = new Clock({
-          elem: элемент
+          elem: document.getElementById('clock')
         });
 
         clock.start(); // старт
         clock.stop(); // стоп
-        // Остальные методы, если нужны, должны быть приватными.
-        // При нажатии на alert часы должны приостанавливаться, а затем продолжать идти с правильным временем.
 
     </script>
 </body>
