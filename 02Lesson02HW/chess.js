@@ -19,7 +19,7 @@ function ChessBase(elemIdToInsert) {
 
     //приватный метод создания ячйки
     function createTD(i, j) {
-        // Создаем ячейки, они имеют адрес td_{row}_{col}, td_6_4
+        // Создаем ячейки, они имеют адрес
         var obj = document.createElement("td");
 
         //Делим на черные/белые
