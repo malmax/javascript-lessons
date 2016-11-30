@@ -16,56 +16,62 @@
         // Остальные методы, если нужны, должны быть приватными.
         // При нажатии на alert часы должны приостанавливаться, 
         // а затем продолжать идти с правильным временем.
-
-        function Clock(options) {
-            var date = new Date();
-            var timer = setInterval(tick,1000);
-            var elem = options.elem || document.body;
-            var enable = true; // часы работают
-            tick();
-            var clockDiv = document.createElement('div');
-            elem.appendChild(clockDiv);
-
-            function tick() {
-                if(enable) {
-                    render();
-                }
+        Number.prototype.addLeadZero = function() {
+            
+            var string = String(this);
+            if(string.length === 1) {
+                string = "0" + string;
             }
-            function render() {
-                if(elem.childNodes.length <= 1) {
-                    drawButtons();
-                }
-                
-                clockDiv.innerText = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-                
+            return string;
+        }
 
+        function Clock(options) {            
+            var that = this;
+            var timer, clockDiv;
+            var elem = options.elem || document.body;      
+            init(); //инициализация часов
+
+            function init() {
+                clockDiv = document.createElement('div'); //див для времени
+                elem.appendChild(clockDiv);
+                drawButtons(); // рисуем кнопки
             }
+
+            function tick() {                                
+                render.call(that);                
+            }
+
+            function render() {  
+                var date = new Date(); //при каждом создании будет текущее время
+                var hours = date.getHours().addLeadZero();
+                var minutes = date.getMinutes().addLeadZero();
+                var seconds = date.getSeconds().addLeadZero();
+
+                clockDiv.innerText = hours + ":" + minutes + ":" + seconds;    
+            }
+
             function drawButtons() {
-                var buttonStart = document.createElement(button);
-                buttonStart.className('btn');
+                var buttonStart = document.createElement('button');
+                buttonStart.className = 'btn';
                 buttonStart.onclick = start.bind(this);
                 buttonStart.innerText = 'Запустить часы';
                 elem.appendChild(buttonStart);
 
-                var buttonStop = document.createElement(button);
-                buttonStop.className('btn');
+                var buttonStop = document.createElement('button');
+                buttonStop.className = 'btn';
                 buttonStop.onclick = stop.bind(this);
                 buttonStop.innerText = 'Остановить часы';
-                elem.appendChild(buttonStop);
-
-                //var alertStop = document.createElement(button);
-                //alertStop.className('btn');
-                //alertStop.onclick = start.bind(this);
-                //alertStop.innerText = 'Остановить часы';
-                //elem.appendChild(alertStop);                
+                elem.appendChild(buttonStop);          
             }
 
-            function start() {
-                enable = true;
+            function start() {               
+                console.log('Clock start');
+                timer = setInterval(tick,1000);                 
             }
 
             function stop() {
-                enable = false;
+                console.log('Clock stop');
+                clearInterval(timer); 
             }
 
             this.start = start;
