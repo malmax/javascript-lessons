@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
-    <div id="clock">
+    <div id="clock" class="text-center">
 
     </div>
     <script lang="JavaScript">
@@ -28,14 +30,16 @@
         function Clock(options) {   
                      
             var that = this;
-            var timer, clockDiv;
+            var timer, clockDiv, buttonStart, buttonStop, buttonAlert;
             var elem = options.elem || document.body;      
             init(); //инициализация часов
 
             function init() {
-                clockDiv = document.createElement('div'); //див для времени
+                clockDiv = document.createElement('h1'); //див для времени
+                clockDiv.className = "text-center";
                 elem.appendChild(clockDiv);
                 drawButtons(); // рисуем кнопки
+                render(); //выводим время на экран
             }
 
             function tick() {                                
@@ -52,26 +56,37 @@
             }
 
             function drawButtons() {
-                var buttonStart = document.createElement('button');
-                buttonStart.className = 'btn';
+                //рисуем кнопку запустить часы
+                buttonStart = document.createElement('button');
+                buttonStart.className = 'btn btn-default';
                 buttonStart.onclick = start.bind(this);
                 buttonStart.innerText = 'Запустить часы';
                 elem.appendChild(buttonStart);
 
-                var buttonStop = document.createElement('button');
-                buttonStop.className = 'btn';
+                //рисуем кнопку остановить часы
+                buttonStop = document.createElement('button');
+                buttonStop.className = 'btn btn-default';
                 buttonStop.onclick = stop.bind(this);
                 buttonStop.innerText = 'Остановить часы';
-                elem.appendChild(buttonStop);          
+                elem.appendChild(buttonStop);   
+
+                //рисуем кнопку вывода Алерта
+                buttonAlert = document.createElement('button');
+                buttonAlert.className = 'btn btn-default';
+                buttonAlert.onclick = function() { alert('Закройте Alert и часы пойдут дальше!'); };
+                buttonAlert.innerText = 'Alert';
+                elem.appendChild(buttonAlert);           
             }
 
             function start() {               
-                console.log('Clock start');
+                buttonStart.disabled = true;
+                buttonStop.disabled = false;
                 timer = setInterval(tick,1000);                 
             }
 
             function stop() {
-                console.log('Clock stop');
+                buttonStart.disabled = false;
+                buttonStop.disabled = true;
                 clearInterval(timer); 
             }
 
@@ -82,8 +97,9 @@
           elem: document.getElementById('clock')
         });
 
-        clock.start(); // старт
         clock.stop(); // стоп
+        clock.start(); // старт
+        
 
     </script>
 </body>

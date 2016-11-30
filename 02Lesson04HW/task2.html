@@ -5,12 +5,19 @@
     <title>Voter</title>
     <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<style>
+    .big {
+        font-size: 3rem;
+        font-weight: bold;
+        display: inline-block;
+    }
+</style>
 </head>
 <body>
     <div id="voter" class="voter">
-        <span class="down btn">-</span>
-        <span class="vote">0</span>
-        <span class="up btn">+</span>
+        <span class="down btn btn-default">-</span>
+        <span class="vote big">0</span>
+        <span class="up btn btn-default">+</span>
     </div>    
     <script charset="utf-8" language="JavaScript" type="text/javascript">
         "use strict";
@@ -38,7 +45,7 @@
                 var downElem = elem.querySelector('.down')
                 if(!downElem) { //если не нашли элемент - создаем
                     downElem = document.createElement('span');
-                    downElem.className = 'down btn';
+                    downElem.className = 'down btn btn-default';
                     downElem.innerText = '-';
                     elem.appendChild(downElem);
                 }
@@ -46,7 +53,7 @@
                 var upElem = elem.querySelector('.up')
                 if(!upElem) { //если не нашли элемент - создаем
                     upElem = document.createElement('span');
-                    upElem.className = 'up btn';
+                    upElem.className = 'up btn btn-default';
                     upElem.innerText = '+';
                     elem.appendChild(upElem);
                 }
@@ -59,7 +66,7 @@
                 div.className = 'setvote';
                 for(let i = 1; i <= 5; i++) { //если поставить var то i будет глобальной и that.setVote(i * 10) будет всегда 5 * 10
                     var setval =  document.createElement('span'); 
-                    setval.className = 'btn';
+                    setval.className = 'btn btn-default';
                     setval.innerText = i * 10;
                     setval.onclick = function() { that.setVote(i * 10); }
                     console.log(setval.onclick);
