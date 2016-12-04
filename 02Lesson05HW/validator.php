@@ -1,5 +1,5 @@
 <?php
-require "gump.class.php";
+require "./gump.class.php";
 
 $validator = new GUMP();
 
