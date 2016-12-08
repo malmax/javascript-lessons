@@ -9,6 +9,7 @@
   <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
   crossorigin="anonymous"></script>
   <script src="./jqueryui/jquery-ui.min.js"></script>
+  <script src="./jqueryui/datepicker-ru.js" type="text/javascript"></script>
   <style>
     .ui-widget-header {
       background-color: dodgerblue;
@@ -23,32 +24,37 @@
         <div class="form-group">
           <label for="exampleInputUsername">Username</label>
           <input type="text" class="form-control" id="exampleInputUsername" name="username">
-          <p class="help-block">Example block-level help text here.</p>
+          <p class="help-block"></p>
         </div>
         <div class="form-group">
           <label for="exampleInputPassword1">Password</label>
           <input type="password" class="form-control" id="exampleInputPassword1" name="password">
-          <p class="help-block">Example block-level help text here.</p>
+          <p class="help-block"></p>
         </div>
         <div class="form-group has-error">
           <label for="exampleInputEmail">Email</label>
           <input type="text" class="form-control" id="exampleInputEmail" name="email">          
-          <p class="help-block">Example block-level help text here.</p>
+          <p class="help-block"></p>
         </div>
         <div class="form-group">
           <label for="exampleInputGender">Gender</label>
           <input type="text" class="form-control" id="exampleInputGender" name="gender">          
-          <p class="help-block">Example block-level help text here.</p>
+          <p class="help-block"></p>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputBirth">Дата рождения</label>
+          <input type="text" class="form-control" id="exampleInputBirth" name="birth">          
+          <p class="help-block"></p>
         </div>
         <div class="form-group">
           <label for="exampleInputCreditCard">Credit Card</label>
           <input type="text" class="form-control" id="exampleInputCreditCard" name="credit_card">          
-          <p class="help-block">Example block-level help text here.</p>
+          <p class="help-block"></p>
         </div>
         <div class="form-group">
           <label for="exampleInputBio">Bio</label>
           <textarea type="text" class="form-control" id="exampleInputBio" name="bio"></textarea>          
-          <p class="help-block">Example block-level help text here.</p>
+          <p class="help-block"></p>
         </div>
         <div id="progressbar"></div>
 
@@ -87,9 +93,12 @@
         $("#form button[name=submit]").on('click',validate);
         //изменение инпутов
         $("#form :input[type!='button']").on('change',updateProgressbar);
-
-        //подготавливаем строчки для вывода ошибок
-        $("p.help-block").text("");
+        //datepicker
+        // localization https://github.com/jquery/jquery-ui/blob/master/ui/i18n/datepicker-ru.js
+        $.datepicker.setDefaults( $.datepicker.regional[ "ru" ] );
+        $("#form :input[name='birth']").datepicker({
+          dateFormat: "yy-mm-dd"
+        });
 
         //обновление прогрессбара
         function updateProgressbar() {
@@ -108,23 +117,43 @@
           
           $("#progressbar").progressbar({value: currentProgress });
           
-        }
-        
+        }        
 
         // валидация данных
         function validate() {
-          var postData = getData();          
-          $.post( "validator.php", $("#form").serialize())
+                  
+          $.post( "validator.php", $("#form").serialize(),null,"json")
             .done(function( data ) {
               // убираем класс ошибки с полей и добавляем класс удачно
-              $('div.form-group').removeClass('has-error').addClass('has-success').find("p.help-block").text("");
-              console.log(data);
-              data = JSON.parse(data);
+              $('div.form-group').removeClass('has-error').addClass('has-success')
+                .find("p.help-block").text(""); //удаляем старые подсказки              
+             
               if('error' in data) {
+                //подготовка диалога
+                let dialog = $("<div></div>").appendTo($("#form")).dialog({
+                  autoOpen: false,
+                  dialogClass: "no-close",
+                  buttons: [
+                    {
+                      text: "OK",
+                      click: function() {
+                        $( this ).dialog( "close" );
+                      }
+                    }
+                  ]
+                });
+
+                //разбираем ошибки
                 Object.keys(data['error']).forEach(function(key) {
                   var keyInDom = key.toLowerCase().replace(' ','_','g');
                   if(($("[name="+keyInDom+"]")).length === 1) {                    
-                    $("[name="+keyInDom+"]").parent().addClass('has-error').remove('has-success').find("p.help-block").text(data['error'][key]);
+                    $("[name="+keyInDom+"]").effect('bounce',{times:3},'slow').parent()
+                      .addClass('has-error').remove('has-success') //выделяем красным поля с ошибками
+                      .find("p.help-block").text(data['error'][key]); //выводим сообщение под инпутом с ошибкой
+                    
+                    //Добавляем ошибку в диалог
+                    $("<div></div>").text(data['error'][key]).appendTo(dialog);
+
                     delete data['error'][key];
                   }
               });
@@ -133,7 +162,13 @@
               Object.keys(data['error']).forEach(function(key) {                
                 var error = $('<div></div>').addClass("alert alert-danger").text(data['error'][key]);
                 $('form').first().before(error);
+
+                //Добавляем ошибку в диалог
+                $("<div></div>").text(data['error'][key]).appendTo(dialog);
               });
+
+              //открываем диалог с ошибками
+              dialog.dialog( "open" );
               }
             
           });
