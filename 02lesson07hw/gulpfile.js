@@ -3,7 +3,6 @@ var gulpIf = require('gulp-if');
 var gulpUseRef = require('gulp-useref');
 var gulpJade = require('gulp-jade');
 var uglify = require('gulp-uglify');
-// var sass = require('gulp-sass');
 var minifyCss = require('gulp-clean-css');
 
 var browserSync = require('browser-sync');
