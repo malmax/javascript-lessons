@@ -3,7 +3,7 @@ var gulpIf = require('gulp-if');
 var gulpUseRef = require('gulp-useref');
 var gulpJade = require('gulp-jade');
 var uglify = require('gulp-uglify');
-var sass = require('gulp-sass');
+// var sass = require('gulp-sass');
 var minifyCss = require('gulp-clean-css');
 
 var browserSync = require('browser-sync');
@@ -26,11 +26,10 @@ gulp.task('jade',function(){
 });
 
 
-gulp.task('useref', function() {
-  return gulp.src('app/src/html/*.jade')
-   .pipe(gulpJade({pretty: true}))
+gulp.task('useref',['jade'], function() {
+  return gulp.src('app/dist/*.html')
    .pipe(gulpUseRef())
-//    .pipe(gulpIf('*.js', uglify())) // почему-то не работает =((
+   .pipe(gulpIf('*.js', uglify())) 
    .pipe(gulpIf('*.css', minifyCss()))
    .pipe(gulp.dest('app/dist'))
 })
