@@ -14,75 +14,75 @@ Number.prototype.addLeadZero = function() {
     return string;
 }
 
-function Clock(options) {   
+class Clock {   
+
+    constructor(options) {
+        // let timer, clockDiv, buttonStart, buttonStop, buttonAlert;
+        this.elem = options.elem || document.body;      
+        this.init(); //инициализация часов
+    }
                 
-    var that = this;
-    var timer, clockDiv, buttonStart, buttonStop, buttonAlert;
-    var elem = options.elem || document.body;      
-    init(); //инициализация часов
-
-    function init() {
-        clockDiv = document.createElement('h1'); //див для времени
-        clockDiv.className = "text-center";
-        elem.appendChild(clockDiv);
-        drawButtons(); // рисуем кнопки
-        render(); //выводим время на экран
+    init() {
+        this.clockDiv = document.createElement('h1'); //див для времени
+        this.clockDiv.className = "text-center";
+        this.elem.appendChild(clockDiv);
+        this.drawButtons(); // рисуем кнопки
+        this.render(); //выводим время на экран
     }
 
-    function tick() {                                
-        render.call(that);                
+    tick = () => {                                
+        this.render();                
     }
 
-    function render() {  
+    render() {  
         var date = new Date(); //при каждом создании будет текущее время
         var hours = date.getHours().addLeadZero();
         var minutes = date.getMinutes().addLeadZero();
         var seconds = date.getSeconds().addLeadZero();
 
-        clockDiv.innerText = hours + ":" + minutes + ":" + seconds;    
+        this.clockDiv.innerText = hours + ":" + minutes + ":" + seconds;    
     }
 
-    function drawButtons() {
+    drawButtons() {
         //рисуем кнопку запустить часы
-        buttonStart = document.createElement('button');
-        buttonStart.className = 'btn btn-default';
-        buttonStart.onclick = start.bind(this);
-        buttonStart.innerText = 'Запустить часы';
-        elem.appendChild(buttonStart);
+        this.buttonStart = document.createElement('button');
+        this.buttonStart.className = 'btn btn-default';
+        this.buttonStart.onclick = start.bind(this);
+        this.buttonStart.innerText = 'Запустить часы';
+        this.elem.appendChild(this.buttonStart);
 
         //рисуем кнопку остановить часы
-        buttonStop = document.createElement('button');
-        buttonStop.className = 'btn btn-default';
-        buttonStop.onclick = stop.bind(this);
-        buttonStop.innerText = 'Остановить часы';
-        elem.appendChild(buttonStop);   
+        this.buttonStop = document.createElement('button');
+        this.buttonStop.className = 'btn btn-default';
+        this.buttonStop.onclick = stop.bind(this);
+        this.buttonStop.innerText = 'Остановить часы';
+        this.elem.appendChild(this.buttonStop);   
 
         //рисуем кнопку вывода Алерта
-        buttonAlert = document.createElement('button');
-        buttonAlert.className = 'btn btn-default';
-        buttonAlert.onclick = function() { alert('Закройте Alert и часы пойдут дальше!'); };
-        buttonAlert.innerText = 'Alert';
-        elem.appendChild(buttonAlert);           
+        this.buttonAlert = document.createElement('button');
+        this.buttonAlert.className = 'btn btn-default';
+        this.buttonAlert.onclick = function() { alert('Закройте Alert и часы пойдут дальше!'); };
+        this.buttonAlert.innerText = 'Alert';
+        this.elem.appendChild(this.buttonAlert);           
     }
 
-    function start() {               
-        buttonStart.disabled = true;
-        buttonStop.disabled = false;
-        timer = setInterval(tick,1000);                 
+    start() {               
+        this.buttonStart.disabled = true;
+        this.buttonStop.disabled = false;
+        this.timer = setInterval(tick,1000);                 
     }
 
-    function stop() {
-        buttonStart.disabled = false;
-        buttonStop.disabled = true;
-        clearInterval(timer); 
+    stop() {
+        this.buttonStart.disabled = false;
+        this.buttonStop.disabled = true;
+        clearInterval(this.timer); 
     }
 
-    this.start = start;
-    this.stop = stop;
+   
 }
 
 window.addEventListener("load", function(evt) {
-    var clock = new Clock({
+    const clock = new Clock({
     elem: document.getElementById('clock')
     });
 
