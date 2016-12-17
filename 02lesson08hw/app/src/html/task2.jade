@@ -1,0 +1,21 @@
+doctype html
+html
+    head
+        title Task 2
+        // build:js js/task2.min.js
+        script(src="../js/task2.js")
+        // endbuild
+        link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
+        style(type="text/css").
+            .big {
+                font-size: 3rem;
+                font-weight: bold;
+                display: inline-block;
+            }
+    body
+        div#voter.voter
+            span.down.btn.btn-default -
+            span.vote.big 0
+            span.up.btn.btn-default +
+    
+        
